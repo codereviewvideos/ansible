@@ -1,0 +1,28 @@
+---
+# Create a group for every user and make that their primary group
+users_create_per_user_group: true
+# If we're not creating a per-user group, then this is the group all users
+# belong to
+users_group: users
+# The default shell for a user if none is specified
+users_default_shell: /bin/bash
+# Create home dirs for new users? Set this to false if you manage home
+# directories in some other way.
+users_create_homedirs: true
+
+ssh_pubkey_files:
+  - ../files/ssh-keys/deploy.pub
+
+
+# Lists of users to create and delete
+users:
+  - username: your_user_name
+    name: "Some Body"
+    password: $6$rounds=10000$Zcb3JEng20fvj$x167lt3OIiHsc01JryniPSNWBxwSWSPhYvBBHpDOK4TSRokSE/jssK/KSDSouryOlfbquvDNm4DbO4ERGfd4qP1
+    groups: ['deploy', 'sudo', 'www-data']
+    uid: 2001
+    shell: /bin/zsh
+
+users_deleted: []
+
+groups_to_create: ['deploy']

@@ -1,0 +1,17 @@
+---
+# tasks file for timezone
+- name: Set /etc/localtime to {{ timezone }}
+  copy: src=/usr/share/zoneinfo/{{ timezone }}
+        dest=/etc/localtime
+        owner=root
+        group=root
+        mode=0644
+        backup={{ backup_etc_files }}
+  when: ansible_os_family == "Debian"
+  tags: [configuration,timezone]
+
+- name: Set /etc/timezone to {{ timezone }}
+  template: dest=/etc/timezone src=timezone.j2
+  notify: update tzdata
+  when: ansible_os_family == "Debian"
+  tags: [configuration,timezone]

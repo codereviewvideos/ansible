@@ -1,0 +1,25 @@
+---
+
+- name: Creating configuration directory
+  file: >
+    state=directory
+    dest=/etc/vim
+    owner=root
+    group=root
+    mode=0755
+  tags:
+    - development
+    - vim
+    - config
+
+- name: Configuring vim
+  template: >
+    src=etc-vim-vimrc.local.j2
+    dest=/etc/vim/vimrc.local
+    owner=root
+    group=root
+    mode=0644
+  tags:
+    - development
+    - vim
+    - config

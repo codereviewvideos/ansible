@@ -1,0 +1,12 @@
+---
+
+- name: Adding source vimrc.local
+  lineinfile: >
+    state=present
+    dest=/etc/vimrc
+    insertafter=EOF
+    line='source /etc/vim/vimrc.local'
+  tags:
+    - development
+    - vim
+    - config

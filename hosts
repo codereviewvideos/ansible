@@ -1,0 +1,11 @@
+ansible-master ansible_ssh_host=192.168.1.169
+symfony-dev.local ansible_ssh_host=192.168.1.215 ansible_ssh_user=codereview
+
+
+
+[nginx]
+symfony-dev.local
+
+
+[symfony]
+symfony-dev.local

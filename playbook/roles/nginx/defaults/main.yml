@@ -1,0 +1,3 @@
+---
+fqdn: "{{ inventory_hostname }}"
+nginx_site_template: symfony.dev.j2

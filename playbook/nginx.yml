@@ -1,0 +1,44 @@
+- name: Apply configuration to web servers
+  hosts: nginx
+  sudo: True
+
+  # vars: 
+  #   php_config:
+  #   - option: "error_reporting"
+  #     section: "PHP"
+  #     value: "E_ALL"
+  #   - option: "display_errors"
+  #     section: "PHP"
+  #     value: "On"
+  #   - option: "display_startup_errors"
+  #     section: "PHP"
+  #     value: "On"
+
+
+  #   php_xdebug_key: PHPSTORM
+  #   php_timezone: Europe/London
+  #   php_repository: ppa:ondrej/php5-5.6
+  #   php_install_items:
+  #     - php5
+  #     - php5-xdebug
+  #     - php5-curl
+  #     - php5-gd
+  #     - php5-mysql
+  #     - php5-mcrypt
+  #     - php5-memcache
+  #   php_configure:
+  #     - file: /etc/php5/cli/php.ini
+  #       values:
+  #         - { section: date, key: date.timezone, value: '{{ php_timezone }}' }
+  #     - file: /etc/php5/mods-available/xdebug.ini
+  #       values:
+  #         - { section: date, key: date.timezone, value: '{{ php_timezone }}' }
+  #         - { section: xdebug, key: xdebug.idekey, value: '{{ php_xdebug_key }}' }
+
+
+  roles:
+    - php
+    - php-composer
+    - php-xdebug
+    - php-fpm
+    - nginx

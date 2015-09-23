@@ -1,0 +1,4 @@
+---
+# defaults file for timezone
+timezone: UTC
+backup_etc_files: true

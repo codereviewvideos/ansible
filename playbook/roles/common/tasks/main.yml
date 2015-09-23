@@ -1,0 +1,30 @@
+---
+- include: set-hostname.yml
+
+
+- name: Install Server Basics
+  apt: pkg={{ item }} state=installed update_cache=true
+  with_items:
+    - ack-grep
+    - acl
+    - curl
+    - exuberant-ctags
+    - git
+    - git-core
+    - htop
+    - ntp
+    - python-pip
+    - python-pycurl
+    - sudo
+    - unzip
+    - vim
+    - wget
+    - zsh
+  notify:
+    - Start NTP
+
+
+- name: Create the sudo group
+  group:
+    name=sudo
+    state=present

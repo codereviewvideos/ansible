@@ -1,0 +1,52 @@
+---
+- name: Installing packages
+  apt: >
+    pkg={{ item }}
+    state=present
+  with_items:
+    - zsh
+
+
+- name: Install oh-my-zsh
+  git: >
+    repo=https://github.com/robbyrussell/oh-my-zsh.git
+    dest="/home/{{item.username}}/.oh-my-zsh"
+    update=yes
+  with_items: users
+
+
+- name: Setting permissions
+  file: >
+    path="/home/{{item.username}}/.oh-my-zsh"
+    owner={{item.username}}
+    group={{item.username}}
+    recurse=yes
+  with_items: users
+
+
+- name: Settings default shell
+  user: >
+    name={{item.username}}
+    shell=/bin/zsh
+  with_items: users
+
+
+- name: Configuring oh-my-zsh
+  template: >
+    src=zshrc.j2
+    dest="/home/{{item.username}}/.zshrc"
+    owner={{item.username}}
+    group={{item.username}}
+    backup=yes
+    mode=0644
+  with_items: users 
+
+
+- name: Copy zsh_aliases
+  copy: >
+    src=".zsh_aliases"
+    dest="/home/{{item.username}}/.zsh_aliases"
+    owner={{item.username}}
+    group={{item.username}}
+    mode=0644
+  with_items: users 

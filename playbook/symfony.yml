@@ -1,0 +1,6 @@
+- name: Install Symfony
+  hosts: symfony
+  sudo: True
+
+  roles:
+    - symfony

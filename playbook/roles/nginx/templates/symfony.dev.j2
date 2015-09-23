@@ -1,0 +1,57 @@
+server {
+    listen 80 default_server;
+
+    root /var/www/{{ fqdn }}/web;
+
+    access_log /var/log/nginx/{{ fqdn | replace(".", "_") }}.log;
+    error_log  /var/log/nginx/{{ fqdn | replace(".", "_") }}-error.log error;
+
+    server_name {{ fqdn }};
+
+    charset utf-8;
+
+    include h5bp/basic.conf;
+
+    location = /favicon.ico { log_not_found off; access_log off; }
+    location = /robots.txt  { log_not_found off; access_log off; }
+
+    location / {
+        # try to serve file directly, fallback to app.php
+        try_files $uri /app.php$is_args$args;
+    }
+
+    # DEV
+    # This rule should only be placed on your development environment
+    # In production, don't include this and don't deploy app_dev.php or config.php
+    location ~ ^/(app_dev|config)\.php(?:/(.*))?$ {
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTPS off;
+
+        fastcgi_buffers 16 16k; 
+        fastcgi_buffer_size 32k;
+    }
+    
+    # PROD
+    location ~ ^/app\.php(?:/(.*))?$ {
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTPS off;
+        # Prevents URIs that include the front controller. This will 404:
+        # http://domain.tld/app.php/some-path
+        # Remove the internal directive to allow URIs like this
+        internal;
+    }
+
+    location ~ ^/(fpmstatus|fpmping)$ {
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+        include fastcgi_params; # fastcgi.conf for version 1.6.1+
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+    }
+}

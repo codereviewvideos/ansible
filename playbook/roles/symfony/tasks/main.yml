@@ -1,0 +1,38 @@
+---
+- name: Download the Symfony installer
+  action: "shell curl -L http://symfony.com/installer > /home/{{ user_name }}/symfony.phar"
+
+
+- name: Move Symfony installer to global location
+  action: "shell mv /home/{{ user_name }}/symfony.phar /usr/local/bin/symfony"
+
+
+- name: Set permissions on Symfony installer
+  action: shell chmod a+x /usr/local/bin/symfony
+
+
+- name: Check if Symfony site exists
+  stat: path=/var/www/{{ fqdn }}
+  register: check_symfony_site_exists
+
+
+- name: Set up a Symfony site
+  action: "shell symfony new /var/www/{{ fqdn }}"
+  when: check_symfony_site_exists.stat.exists == false
+
+
+- name: Create Symfony dir permissions
+  file: path=/var/www/{{ fqdn }}
+    state=directory
+    owner={{ user_name }}
+    group={{ web_server_user }}
+    mode=0775
+    recurse=true
+
+
+- name: Add .gitignore if new directory
+  copy: src=.gitignore dest=/var/www/{{ fqdn }}/.gitignore
+    owner={{ user_name }}
+    group={{ web_server_user }}
+    mode=0644
+  when: check_symfony_site_exists.stat.exists == false

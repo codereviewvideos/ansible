@@ -1,0 +1,7 @@
+---
+
+mysql_users:
+  - name: dbuser
+    pass: dbpass
+    priv: "*.*:ALL"                     # optional, defaults to "*.*:ALL"
+    host: "%"                           # optional, defaults to "localhost"

@@ -1,0 +1,18 @@
+- hosts: all
+  sudo: True
+
+  vars:
+    zsh_theme: robbyrussell
+    vim_config:
+      - 'set syntax'
+      - 'set number'
+
+  roles:
+    - ssh
+    - users
+    - common
+    - ubuntu-unattended-upgrades
+    - ohmyzsh
+    - { role: timezone, timezone: "Europe/London" }
+    - vim
+    - fail2ban

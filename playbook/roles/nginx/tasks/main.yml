@@ -1,0 +1,54 @@
+---
+- name: Add Nginx Repository
+  apt_repository: repo='ppa:nginx/stable' state=present
+  register: ppastable
+
+
+- name: Install Nginx
+  apt: pkg=nginx state=installed update_cache=true
+  when: ppastable|success
+  register: nginx_installed
+  notify:
+    - Start Nginx
+
+
+- name: Add nginx.conf
+  when: nginx_installed|success
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf owner=root group=root
+
+
+- name: Replace default mime types
+  when: nginx_installed|success
+  copy: src=h5bp/mime.types dest=/etc/nginx owner=root group=root
+
+
+- name: Add H5BP Config
+  when: nginx_installed|success
+  copy: src=h5bp dest=/etc/nginx owner=root group=root
+
+
+- name: Disable Default Site
+  when: nginx_installed|success
+  file: path=/etc/nginx/sites-enabled/default state=absent
+
+
+- name: Add Site Config
+  when: nginx_installed|success
+  register: site_config
+  template: src={{ nginx_site_template }} dest=/etc/nginx/sites-available/{{ fqdn }}.conf owner=root group=root
+
+
+- name: Enable Site Config
+  when: site_config|success
+  file: src=/etc/nginx/sites-available/{{ fqdn }}.conf dest=/etc/nginx/sites-enabled/{{ fqdn }}.conf state=link
+
+
+- name: Add {{ user_name }} to {{ web_server_user }} group
+  action: user name="{{ user_name }}" groups="{{ web_server_user }}" append=yes
+
+
+- name: Remove Apache
+  apt: pkg={{item}} state=absent update_cache=true
+  with_items:
+    - apache
+    - apache2

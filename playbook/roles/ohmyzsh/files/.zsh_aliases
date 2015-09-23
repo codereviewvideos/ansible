@@ -1,0 +1,18 @@
+alias dev="php app/console --env=dev"
+alias prod="php app/console --env=prod"
+alias devcc="dev cache:clear"
+
+alias trunco="sudo truncate --size 0 " 
+
+alias specc="clear && bin/phpspec run"
+
+alias sufi="sudo ifdown eth0 && sudo ifup eth0 && sudo ntpdate ntp.ubuntu.com"
+alias supdo="sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get autoremove -y"
+alias synco="rsync -avhz --progress --stats "
+
+alias synco="rsync -avz --progress --stats "
+
+alias gitdc="git diff --name-only --diff-filter=U"
+
+# rsync
+#lias sy='rsync -rtvz --delete '
