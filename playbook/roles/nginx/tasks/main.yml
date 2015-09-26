@@ -27,7 +27,12 @@
   copy: src=h5bp dest=/etc/nginx owner=root group=root
 
 
-- name: Disable Default Site
+- name: Disable Default Available Site
+  when: nginx_installed|success
+  file: path=/etc/nginx/sites-available/default state=absent
+
+
+- name: Disable Default Enabled Site
   when: nginx_installed|success
   file: path=/etc/nginx/sites-enabled/default state=absent
 
