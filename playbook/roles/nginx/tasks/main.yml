@@ -57,3 +57,5 @@
   with_items:
     - apache
     - apache2
+  notify:
+    - Restart Nginx
